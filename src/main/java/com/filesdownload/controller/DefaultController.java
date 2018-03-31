@@ -23,8 +23,8 @@ public class DefaultController {
 
 	@PostMapping("/googledrive")
 	public String sayHello(@RequestParam("name") String name, Model model) {
-		System.out.println("drive = "+GoogleDriveUtil.getDrive());
+		//System.out.println("drive = "+GoogleDriveUtil.getDrive());
 		model.addAttribute("name", name);
-		return "hello";
+		return "googledrive";
 	}
 }
