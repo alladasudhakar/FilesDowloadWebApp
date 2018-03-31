@@ -11,17 +11,14 @@
 <%@ page import="com.google.api.client.http.javanet.NetHttpTransport" %>
 <%@ page import="com.google.api.client.json.JsonFactory" %>
 <%@ page import="com.google.api.client.json.jackson2.JacksonFactory" %>
-<%@ page import="" %>
-<%@ page import="" %>
-<%@ page import="" %>
-<%@ page import="" %>
+
 
 
 <%!
 
-private static String CLIENT_ID = "324390312543-plvf9j69lv9rqbbtobq45ebr7vs07vuo.apps.googleusercontent.com";
-private static String CLIENT_SECRET = "EN-bpaKx3nOBGMEERQFIpCxM";
-private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE,
+String CLIENT_ID = "324390312543-plvf9j69lv9rqbbtobq45ebr7vs07vuo.apps.googleusercontent.com";
+String CLIENT_SECRET = "EN-bpaKx3nOBGMEERQFIpCxM";
+final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE,
 		DriveScopes.DRIVE_APPDATA);
 
 %>
@@ -37,11 +34,19 @@ private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE,
 <%
 	HttpTransport httpTransport = new NetHttpTransport();
 	JsonFactory jsonFactory = new JacksonFactory();
-	
+	String REDIRECT_URI = "http://localhost:8888/authcode";
+	/*
 	GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory,
 			CLIENT_ID, CLIENT_SECRET, SCOPES).setAccessType("online")
 					.setApprovalPrompt("auto").build();
-	String REDIRECT_URI = "http://localhost:8888/authcode";
+	*/
+	
+	GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory,
+			CLIENT_ID, CLIENT_SECRET, SCOPES).build();
+	
+	String url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build(); 
+	System.out.println("url = "+url);
+	response.sendRedirect(url);
 
 %>
 </body>
