@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.filesdownload.util.GoogleDriveUtil;
-
 @Controller
 public class DefaultController {
 
@@ -23,7 +21,6 @@ public class DefaultController {
 
 	@PostMapping("/googledrive")
 	public String sayHello(@RequestParam("name") String name, Model model) {
-		//System.out.println("drive = "+GoogleDriveUtil.getDrive());
 		model.addAttribute("name", name);
 		return "googledrive";
 	}
