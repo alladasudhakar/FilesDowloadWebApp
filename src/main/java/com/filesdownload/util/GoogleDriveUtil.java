@@ -8,13 +8,12 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 
@@ -24,6 +23,7 @@ public class GoogleDriveUtil {
 	private static String CLIENT_SECRET = "EN-bpaKx3nOBGMEERQFIpCxM";
 	private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE,
 			DriveScopes.DRIVE_APPDATA);
+	static DataStoreFactory memDsf = new MemoryDataStoreFactory();
 	
 	public static Drive getDrive() {
 		Drive service = null;
@@ -31,9 +31,12 @@ public class GoogleDriveUtil {
 		JsonFactory jsonFactory = new JacksonFactory();
 
 		try {
-			GoogleAuthorizationCodeFlow flow = null;
+			/*
+			GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory,
+					CLIENT_ID, CLIENT_SECRET, SCOPES).setDataStoreFactory(memDsf).setAccessType("offline").build();
+			*/
 			
-			flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory,
+			GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory,
 					CLIENT_ID, CLIENT_SECRET, SCOPES).setAccessType("online")
 							.setApprovalPrompt("auto").build();
 			String REDIRECT_URI = "http://localhost:8888/authcode";
