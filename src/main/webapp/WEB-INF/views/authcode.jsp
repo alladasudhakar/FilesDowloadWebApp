@@ -16,6 +16,7 @@
 <%@ page import="com.google.api.client.json.jackson2.JacksonFactory" %>
 <%@ page import="com.google.api.services.drive.model.File" %>
 <%@ page import="com.google.api.services.drive.model.FileList" %>
+<%@ page import="com.filesdownload.util.EncryptDecryptUtil" %>
 
 <html>
 <head>
@@ -66,13 +67,18 @@ private static String UPLOADED_FOLDER = "E://temp//";
 		
 	}
 	*/
+	//encrypt file
+	java.io.File inputFile = new java.io.File(UPLOADED_FOLDER, fileName);
+	java.io.File outputFile = new java.io.File(UPLOADED_FOLDER, fileName.concat(".encrypted"));
+	EncryptDecryptUtil.encrypt(inputFile, outputFile);
+	
 	File fileMetadata = new File();
-	fileMetadata.setTitle(fileName);
+	fileMetadata.setTitle(fileName.concat(".encrypted"));
 	//fileMetadata.setParents(Collections.singletonList(folderId));
-	java.io.File filePath = new java.io.File(UPLOADED_FOLDER, fileName);
+	java.io.File filePath = new java.io.File(UPLOADED_FOLDER, fileName.concat(".encrypted"));
 	FileContent fileCont = new FileContent("text/plain", filePath);
 	File uploadFile = service.files().insert(fileMetadata, fileCont).execute();
-	System.out.println("File ID: " + uploadFile.getId());
+	out.println("Encrypted File ("+fileName.concat(".encrypted")+") uploaded : " + uploadFile.getId());
 	
 	FileList result = service.files().list().execute();
 	List<File> files = result.getItems();// .getFiles();
@@ -84,13 +90,39 @@ private static String UPLOADED_FOLDER = "E://temp//";
 			System.out.printf("%s (%s)\n", file.getTitle(), file.getId());
 			//if("test.txt".equalsIgnoreCase(file.getTitle()))
 				
-			if(fileName.equalsIgnoreCase(file.getTitle()))
+			if(fileName.concat(".encrypted").equalsIgnoreCase(file.getTitle()))
 			{
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				service.files().get(file.getId()).executeMediaAndDownloadTo(outputStream);
 				out.println("uploaded file value from google drive = " + outputStream.toString());
 				out.println("<br>");
 			}
+			
+			if(fileName.concat(".encrypted").equalsIgnoreCase(file.getTitle()))
+			{
+				java.io.File encFile = new java.io.File(UPLOADED_FOLDER, fileName.concat(".encrypted"));
+				if(encFile.exists())
+				{
+					encFile.delete();
+				}
+				OutputStream encOutputStream = new FileOutputStream(encFile);
+				service.files().get(file.getId()).executeMediaAndDownloadTo(encOutputStream);
+				out.println("encrypted file from google drive stored locally.");
+				out.println("<br>");
+				
+				java.io.File decFile = new java.io.File(UPLOADED_FOLDER, fileName.concat(".decrypted"));
+				EncryptDecryptUtil.decrypt(encFile, decFile);
+				
+				BufferedReader br = new BufferedReader(new FileReader(decFile));
+				String line;
+				while((line = br.readLine()) != null)
+				{
+					out.println("Decrypted file line = " + line);
+					out.println("<br>");
+				}
+				br.close();
+			}
+			System.out.println("---------------------------------------------------------");
 		}
 	}
 
