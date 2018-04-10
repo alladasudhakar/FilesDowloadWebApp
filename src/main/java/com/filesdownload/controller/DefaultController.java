@@ -21,6 +21,8 @@ public class DefaultController {
 
 	// Save the uploaded file to this folder
 	private static String UPLOADED_FOLDER = "E://temp//";
+	
+	public static String fileName = "";
 
 	@RequestMapping("/")
 	public String index() {
@@ -62,6 +64,7 @@ public class DefaultController {
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
 			Files.write(path, bytes);
+			fileName = file.getOriginalFilename();
 			request.getSession().setAttribute("fileName", "" + file.getOriginalFilename());
 			request.getSession().setAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
 			redirectAttributes.addFlashAttribute("message",

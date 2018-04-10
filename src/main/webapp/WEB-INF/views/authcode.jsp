@@ -17,6 +17,7 @@
 <%@ page import="com.google.api.services.drive.model.File" %>
 <%@ page import="com.google.api.services.drive.model.FileList" %>
 <%@ page import="com.filesdownload.util.EncryptDecryptUtil" %>
+<%@ page import="com.filesdownload.controller.DefaultController" %>
 
 <html>
 <head>
@@ -53,7 +54,8 @@ private static String UPLOADED_FOLDER = "E://temp//";
 	Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build(); 
 	System.out.println("service = "+service);
 	
-	String fileName = (String)session.getAttribute("fileName");
+	//String fileName = (String)session.getAttribute("fileName");
+	String fileName = DefaultController.fileName; 
 	
 	/*
 	//Creating a file
