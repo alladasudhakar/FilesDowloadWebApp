@@ -8,10 +8,10 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class BootApplication {
+public class FDWABootApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BootApplication.class, args);
+		SpringApplication.run(FDWABootApplication.class, args);
 	}
 
 	@Bean
